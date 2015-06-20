@@ -9,12 +9,12 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
 
             })
             .state('products', {
-                url:'/products',
+                url:'/products/:userId',
                 templateUrl:'dash/products.ejs',
                 controller:'productsCtrl'
             })
             .state('add', {
-                url: '/add',
+                url: '/add/:userId',
                 templateUrl: 'dash/add.ejs',
                 controller: 'addCtrl'
             });

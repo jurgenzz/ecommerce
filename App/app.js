@@ -10,6 +10,7 @@ mongoose.connect('mongodb://localhost/products');
 
 
 var Product = require('./models/products');
+var User = require('./models/users');
 var routes = require('./routes/routes');
 var users = require('./routes/users');
 
@@ -30,34 +31,46 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var router = express.Router();
-router.route('/products')
 
-    // create a bear (accessed at POST http://localhost:8080/api/bears)
-    .post(function(req, res) {
+router.param('user', function(req, res, next, id) {
+    var query = User.findById(id);
 
-        var product = new Product();      // create a new instance of the Bear model
-        product.name = req.body.name;
-        product.desc = req.body.desc;
-        product.price = req.body.price; // set the bears name (comes from the request)
+    query.exec(function (err, user){
+        if (err) { return next(err); }
+        if (!user) { return next(new Error('can\'t find user')); }
 
-        // save the bear and check for errors
-        product.save(function(err) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'product created!' });
-        });
-
-    })
-
-    .get(function(req, res) {
-        Product.find(function (err, bears) {
-            if (err)
-                res.send(err);
-
-            res.json(bears);
-        });
+        req.user = user;
+        return next();
     });
+});
+
+
+router.get('/user/:user', function(req, res) {
+    req.user.populate('products', function(err, post) {
+        if (err) { return next(err); }
+
+        res.json(post);
+    });
+});
+
+
+router.post('/user/:user/products', function(req, res, next) {
+    var product = new Product(req.body);
+    product.post = req.post;
+
+    product.save(function(err, product){
+        if(err) {return next(err); }
+
+        req.user.products.push(product);
+        req.user.save(function(err, product){
+            if(err){ return next(err); }
+
+            res.json(product);
+        })
+    })
+});
+
+
 app.use('/api', router);
 
 app.get('/', routes.index);
