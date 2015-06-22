@@ -23,6 +23,20 @@ angular.module('eCtrl', [])
 
 
     })
+    .controller('categoriesCtrl', function($scope, $http, $stateParams, auth){
+        $scope.currentId = auth.currentId;
+        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + '/categories')
+            .success(function() {
+                console.log(data);
+            });
+        $scope.saveCategory = function() {
+            var data = $scope.category;
+            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/category', data)
+                .success(function(data) {
+                    console.log(data);
+                })
+        }
+    })
     .controller('productsCtrl', function($scope, $http, $stateParams, auth){
         $scope.currentId = auth.currentId;
         $scope.products = "";

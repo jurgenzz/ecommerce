@@ -15,6 +15,17 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
                 }]
 
             })
+
+            .state('category', {
+                url:'/categories',
+                templateUrl:'dash/categories.ejs',
+                controller:'categoriesCtrl'
+            })
+            .state('addC', {
+                url:'/categories/add',
+                templateUrl:'dash/addC.ejs',
+                controller:'categoriesCtrl'
+            })
             .state('products', {
                 url:'/products',
                 templateUrl:'dash/products.ejs',

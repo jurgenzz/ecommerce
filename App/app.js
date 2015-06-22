@@ -10,12 +10,14 @@ var jwt = require('express-jwt');
 require ('./models/users');
 require('./models/products');
 require('./config/passport');
+require('./models/categories');
 
 mongoose.connect('mongodb://localhost/products');
 
 
 var Product = require('./models/products');
 var User = require('./models/users');
+var Category = require('./models/categories');
 var routes = require('./routes/routes');
 var users = require('./routes/users');
 
@@ -52,28 +54,61 @@ router.param('user', function(req, res, next, id) {
     });
 });
 
+router.param('category', function(req, res, next, id) {
+    var query = Category.findById(id);
+    query.exec(function(err, category){
+        if (err) {return next(err); }
+        if (!category) { return next(new Error('cant find category')); }
 
-router.get('/user/:user', function(req, res) {
-    req.user.populate('products', function(err, post) {
+        req.category = category;
+        return next ();
+    })
+});
+
+
+router.get('/user/:user/category/:category', function(req, res) {
+    req.category.populate('products', function(err, post) {
         if (err) { return next(err); }
 
         res.json(post);
     });
 });
 
+router.get('/user/:user/category', function(req, res) {
+    req.user.populate('categories', function(err, post) {
+        if (err) {return next(err); }
 
-router.post('/user/:user/products', function(req, res, next) {
+        res.json(post);
+    });
+});
+
+
+router.post('/user/:user/category/:category/', function(req, res, next) {
     var product = new Product(req.body);
     product.post = req.post;
 
     product.save(function(err, product){
         if(err) {return next(err); }
 
-        req.user.products.push(product);
-        req.user.save(function(err, product){
+        req.category.products.push(product);
+        req.category.save(function(err, product){
             if(err){ return next(err); }
 
             res.json(product);
+        })
+    })
+});
+
+router.post('/user/:user/category', function(req, res, next) {
+    var category = new Category(req.body);
+    category.post = req.post;
+
+    category.save(function(err, category) {
+        req.user.categories.push(category);
+        req.user.save(function(err, category) {
+            if(err){return next(err) ;}
+
+            res.json(category);
         })
     })
 });
