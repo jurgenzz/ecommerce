@@ -11,6 +11,7 @@ require ('./models/users');
 require('./models/products');
 require('./config/passport');
 require('./models/categories');
+require('./models/stores');
 
 mongoose.connect('mongodb://localhost/products');
 
@@ -20,6 +21,8 @@ var User = require('./models/users');
 var Category = require('./models/categories');
 var routes = require('./routes/routes');
 var users = require('./routes/users');
+var Store = require('./models/stores');
+
 
 var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
@@ -65,8 +68,38 @@ router.param('category', function(req, res, next, id) {
     })
 });
 
+router.param('stores', function(req, res, next, id) {
+    var query = Store.findById(id);
+    query.exec(function(err, stores) {
+        if (err) {return next(err); }
+        if (!stores) { return next(new Error('Store not found')); }
 
-router.get('/user/:user/category/:category', function(req, res) {
+        req.stores = stores;
+        return next();
+    })
+});
+
+router.get('/user/:user', function(req, res){
+    req.user.populate('stores', function(err, store) {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(store);
+    });
+});
+
+router.get('/user/:user/:stores/', function(req, res) {
+    req.stores.populate('categories', function(err, category) {
+        if (err) {
+            return next(err);
+        }
+        res.json(category);
+    });
+});
+
+
+router.get('/user/:user/:stores/:category', function(req, res) {
     req.category.populate('products', function(err, post) {
         if (err) { return next(err); }
 
@@ -74,16 +107,40 @@ router.get('/user/:user/category/:category', function(req, res) {
     });
 });
 
-router.get('/user/:user/category', function(req, res) {
-    req.user.populate('categories', function(err, post) {
-        if (err) {return next(err); }
 
-        res.json(post);
-    });
+
+router.post('/user/:user/stores', function(req, res, next) {
+    var store = new Store(req.body);
+    store.post = req.post;
+
+    store.save(function(err, store) {
+        if(err) {return next(err); }
+
+        req.user.stores.push(err, store);
+        req.user.save(function(err, stores) {
+            if(err){return next(err); }
+
+            res.json(stores);
+        })
+    })
+});
+
+router.post('/user/:user/:stores/category', function(req, res, next) {
+    var category = new Category(req.body);
+    category.post = req.post;
+
+    category.save(function(err, category) {
+        req.stores.categories.push(category);
+        req.stores.save(function(err, category) {
+            if(err){return next(err) ;}
+
+            res.json(category);
+        })
+    })
 });
 
 
-router.post('/user/:user/category/:category/', function(req, res, next) {
+router.post('/user/:user/:stores/:category/products', function(req, res, next) {
     var product = new Product(req.body);
     product.post = req.post;
 
@@ -99,19 +156,6 @@ router.post('/user/:user/category/:category/', function(req, res, next) {
     })
 });
 
-router.post('/user/:user/category', function(req, res, next) {
-    var category = new Category(req.body);
-    category.post = req.post;
-
-    category.save(function(err, category) {
-        req.user.categories.push(category);
-        req.user.save(function(err, category) {
-            if(err){return next(err) ;}
-
-            res.json(category);
-        })
-    })
-});
 
 router.post('/register', function(req, res, next){
     if(!req.body.username || !req.body.password){
