@@ -1,6 +1,6 @@
 angular.module('myxmap', ['eCtrl', 'ui.router'])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider){
-        $locationProvider.hashPrefix("!");
+        $locationProvider.hashPrefix('!');
         $stateProvider
             .state('home', {
                 url: '/home',
@@ -15,19 +15,28 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
                 }]
 
             })
-
+            .state('stores', {
+                url:'/stores',
+                templateUrl:'dash/stores.ejs',
+                controller:'storesCtrl'
+            })
+            .state('addStore', {
+                url:'/stores/add',
+                templateUrl:'dash/addStore.ejs',
+                controller:'storesCtrl'
+            })
             .state('category', {
-                url:'/categories',
+                url:'/:storeId/categories/',
                 templateUrl:'dash/categories.ejs',
                 controller:'categoriesCtrl'
             })
             .state('addC', {
-                url:'/categories/add',
+                url:'/:storeId/categories/add',
                 templateUrl:'dash/addC.ejs',
                 controller:'categoriesCtrl'
             })
             .state('products', {
-                url:'/products',
+                url:'/:storeId/:categoryId/products',
                 templateUrl:'dash/products.ejs',
                 controller:'productsCtrl',
                 onEnter: ['$state', 'auth', function($state, auth) {
@@ -38,8 +47,9 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
                     }
                 }]
             })
+
             .state('add', {
-                url: '/add',
+                url: '/:storeId/:categoryId/products/add',
                 templateUrl: 'dash/add.ejs',
                 controller: 'addCtrl',
                 onEnter: ['$state', 'auth', function($state, auth) {

@@ -1,6 +1,9 @@
-{{ currentId()}}
+<div class="content-header">
+    <h3>{{products.name}}</h3>
+    <a href="dash#!/{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
+</div>
 
-<div ng-repeat="product in products" class="product-container">
+<div ng-repeat="product in products.products" class="product-container">
     <div class="product-box">
         <h3>{{product.name}}</h3>
     </div>

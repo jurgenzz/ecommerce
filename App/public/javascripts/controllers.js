@@ -11,10 +11,11 @@ angular.module('eCtrl', [])
     .controller('addCtrl', function($scope, $http, $stateParams, auth) {
         // $http.post('http://localhost:3000/api/products')
         $scope.currentId = auth.currentId;
-        $scope.id = $stateParams.userId;
+        $scope.storeId = $stateParams.storeId;
+        $scope.catId = $stateParams.categoryId;
         $scope.saveProduct = function() {
             var data = $scope.product;
-            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + "/products", data)
+            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId +"/products", data)
                 .success(function() {
                     console.log(data);
                 })
@@ -23,26 +24,52 @@ angular.module('eCtrl', [])
 
 
     })
-    .controller('categoriesCtrl', function($scope, $http, $stateParams, auth){
+
+    .controller('storesCtrl', function($scope, $http, auth) {
         $scope.currentId = auth.currentId;
-        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + '/categories')
-            .success(function() {
-                console.log(data);
+        $scope.stores = "";
+        $http.get('http://localhost:3000/api/user/' + $scope.currentId())
+            .success(function(data){
+                $scope.stores = data.stores;
             });
-        $scope.saveCategory = function() {
-            var data = $scope.category;
-            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/category', data)
+        $scope.saveStore = function() {
+            var data = $scope.stories;
+            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/stores', data)
                 .success(function(data) {
                     console.log(data);
                 })
         }
     })
+
+
+    .controller('categoriesCtrl', function($scope, $http, $stateParams, auth, $window){
+        $scope.currentId = auth.currentId;
+        $scope.storeId = $stateParams.storeId;
+        $scope.categories = "";
+        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + "/" + $scope.storeId)
+            .success(function(data) {
+                $scope.categories = data;
+                console.log(data);
+            });
+        $scope.saveCategory = function() {
+            var storeId = $stateParams.storeId;
+            var data = $scope.category;
+            var url = 'dash#!/' + storeId + '/categories/';
+            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/' + storeId + '/category', data)
+                .success(function(data) {
+                    console.log(data);
+                    $window.location.href = url;
+                })
+        }
+    })
     .controller('productsCtrl', function($scope, $http, $stateParams, auth){
         $scope.currentId = auth.currentId;
+        $scope.storeId = $stateParams.storeId;
+        $scope.catId = $stateParams.categoryId;
         $scope.products = "";
-        $http.get('http://localhost:3000/api/user/' + $scope.currentId() )
+        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId)
             .success(function(data) {
-                $scope.products = data.products;
+                $scope.products = data;
                 console.log(data);
             })
     })

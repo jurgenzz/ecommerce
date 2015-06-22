@@ -1,8 +1,9 @@
-{{ currentId()}}
-
-<div ng-repeat="product in products" class="product-container">
-    <div class="product-box">
-        <h3>{{product.name}}</h3>
-    </div>
-    <a href="#" class="info">info </a><a href="#" class="edit">edit</a>
+<div class="content-header">
+    <h3>{{categories.name}}</h3>
+    <a href="dash#!/{{storeId}}/categories/add" class="btn pull-right">Add Category</a>
 </div>
+
+
+<div ng-repeat="category in categories.categories">
+      <a href="dash#!/{{storeId}}/{{category._id}}/products"><h3>{{category.name}}</h3></a>
+    </div>
