@@ -5,18 +5,60 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
             .state('home', {
                 url: '/home',
                 templateUrl:'dash/home.ejs',
-                controller:'indexCtrl'
+                controller:'indexCtrl',
+                onEnter: ['$state', 'auth', function($state, auth) {
+                    if(auth.isLoggedIn()){
+                        console.log('true');
+                    } else {
+                        $state.go('login');
+                    }
+                }]
 
             })
             .state('products', {
-                url:'/products/:userId',
+                url:'/products',
                 templateUrl:'dash/products.ejs',
-                controller:'productsCtrl'
+                controller:'productsCtrl',
+                onEnter: ['$state', 'auth', function($state, auth) {
+                    if(auth.isLoggedIn()){
+                        console.log('true');
+                    } else {
+                        $state.go('login');
+                    }
+                }]
             })
             .state('add', {
-                url: '/add/:userId',
+                url: '/add',
                 templateUrl: 'dash/add.ejs',
-                controller: 'addCtrl'
+                controller: 'addCtrl',
+                onEnter: ['$state', 'auth', function($state, auth) {
+                    if(auth.isLoggedIn()){
+                        console.log('true');
+                    } else {
+                        $state.go('login');
+                    }
+                }]
+            })
+            .state('login', {
+                url: '/login',
+                templateUrl: 'dash/login.ejs',
+                controller:'loginCtrl',
+                onEnter: ['$state', 'auth', function($state, auth){
+                    if(auth.isLoggedIn()){
+                        $state.go('home');
+
+                    }
+                }]
+            })
+            .state('register', {
+                url: '/register',
+                templateUrl: 'dash/register.ejs',
+                controller:'loginCtrl',
+                onEnter: ['$state', 'auth', function($state, auth){
+                    if(auth.isLoggedIn()){
+                        $state.go('home');
+                    }
+                }]
             });
         $urlRouterProvider.otherwise('home');
     });

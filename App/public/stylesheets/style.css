@@ -35,7 +35,7 @@ a {
 
 .user-info {
     width:100%;
-    height:50px;
+    height:150px;
     background: #fff;
     padding:15px 0 0 0;
 }
@@ -162,4 +162,19 @@ a {
     display:block;
     width:250px;
     height:50px;
+}
+
+.login {
+    background: #c6c6c6;
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+}
+
+.login form {
+    position: relative;
+    top:40%;
+    left:40%;
 }

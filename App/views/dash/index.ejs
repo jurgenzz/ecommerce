@@ -11,11 +11,16 @@
 <body ng-app="myxmap">
 <div id="header">
     <h3>DASHBOARD</h3>
+
 </div>
 <div class="wrapper">
     <div class="left-menu">
         <div class="user-info">
-            <h3>User name</h3>
+            <div ng-controller="NavCtrl">
+                <h3>{{ currentUser() }}</h3>
+                <p> {{ currentId() }} </p>
+                <a href="" ng-click="logOut()">Log Out</a>
+            </div>
         </div>
         <ul>
             <li> <a href="dash#!/home">Your Stores</a></li>
@@ -24,6 +29,7 @@
             <li> <a href="#">Statistics</a></li>
             <li> <a href="#">Orders</a></li>
             <li> <a href="#">Widgets</a></li>
+
         </ul>
     </div>
 

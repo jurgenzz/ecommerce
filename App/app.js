@@ -5,6 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var jwt = require('express-jwt');
+require ('./models/users');
+require('./models/products');
+require('./config/passport');
 
 mongoose.connect('mongodb://localhost/products');
 
@@ -13,6 +18,8 @@ var Product = require('./models/products');
 var User = require('./models/users');
 var routes = require('./routes/routes');
 var users = require('./routes/users');
+
+var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
 
 
@@ -29,6 +36,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 var router = express.Router();
 
@@ -70,14 +78,50 @@ router.post('/user/:user/products', function(req, res, next) {
     })
 });
 
+router.post('/register', function(req, res, next){
+    if(!req.body.username || !req.body.password){
+        return res.status(400).json({message: 'Please fill out all fields'});
+    }
+
+    var user = new User();
+
+    user.username = req.body.username;
+
+    user.setPassword(req.body.password);
+
+    user.save(function (err){
+        if(err){ return next(err); }
+
+        return res.json({token: user.generateJWT()})
+    });
+});
+
+router.post('/login', function(req, res, next){
+    if(!req.body.username || !req.body.password){
+        return res.status(400).json({message: 'Please fill out all fields'});
+    }
+
+    passport.authenticate('local', function(err, user, info){
+        if(err){ return next(err); }
+
+        if(user){
+            return res.json({token: user.generateJWT()});
+        } else {
+            return res.status(401).json(info);
+        }
+    })(req, res, next);
+});
 
 app.use('/api', router);
 
 app.get('/', routes.index);
+//app.get('/login', routes.login);
+//app.get('/register', routes.register);
 app.get('/dash', routes.dash);
 app.get('/users', users);
 app.get('/dash/:name', routes.partials);
 app.get('*', routes.index);
+
 
 
 
