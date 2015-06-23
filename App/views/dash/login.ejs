@@ -1,21 +1,28 @@
 <div class="login">
-    <form ng-submit="logIn()"
-          style="margin-top:30px;">
-        <h3>Log In</h3>
+    <div class="error">
+        <p>{{error}}</p>
+    </div>
 
-        <div class="form-group">
-            <input type="text"
-                   class="form-control"
-                   placeholder="Username"
-                   ng-model="user.username"></input>
-        </div>
-        <div class="form-group">
-            <input type="password"
-                   class="form-control"
-                   placeholder="Password"
-                   ng-model="user.password"></input>
-        </div>
-        <button type="submit" class="btn btn-primary">Log In</button>
-        or <a href="dash#!/register">Sign up</a>
-    </form>
+    <div class="form-wrapper">
+
+
+        <form ng-submit="logIn()">
+            <p class="form-header">Log In</p>
+
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Username"
+                       ng-model="user.username"></input>
+            </div>
+            <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       placeholder="Password"
+                       ng-model="user.password"></input>
+            </div>
+            <button type="submit" class="btn btn-login" >Enter</button>
+            <p class="sign-up-link">Not a member? <a href="dash#!/register">Sign up now!</a></p>
+        </form>
+    </div>
 </div>

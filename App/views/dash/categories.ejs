@@ -1,9 +1,9 @@
 <div class="content-header">
-    <h3>{{categories.name}}</h3>
+    <p>{{categories.name}}</p>
     <a href="dash#!/{{storeId}}/categories/add" class="btn pull-right">Add Category</a>
 </div>
 
 
 <div ng-repeat="category in categories.categories">
-      <a href="dash#!/{{storeId}}/{{category._id}}/products"><h3>{{category.name}}</h3></a>
+      <a href="dash#!/{{storeId}}/{{category._id}}/products/"><h3>{{category.name}}</h3></a>
     </div>

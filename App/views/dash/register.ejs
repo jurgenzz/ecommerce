@@ -1,20 +1,41 @@
 <div class="login">
-    <form ng-submit="register()"
-          style="margin-top:30px;">
-        <h3>Register</h3>
+    <div class="error">
+        <p>{{error}}</p>
+    </div>
 
-        <div class="form-group">
-            <input type="text"
+    <div class="form-wrapper">
+    <form ng-submit="register()" name="form" novalidate>
+        <p class="form-header">Sign Up</p>
+
+        <div class="form-group" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
+            <input type="email"
+                   name="email"
                    class="form-control"
-                   placeholder="Username"
+                   placeholder="Email"
                    ng-model="user.username"></input>
         </div>
         <div class="form-group">
             <input type="password"
+                   name="password"
+                   id="password"
+                   ng-model="password"
+                   required,
+                   match="user.password"
                    class="form-control"
-                   placeholder="Password"
-                   ng-model="user.password"></input>
+                   placeholder="Password"></input>
         </div>
-        <button type="submit" class="btn btn-primary">Register</button>
+        <div class="form-group">
+            <input type="password"
+                   name="user.password"
+                   id="user.password"
+                   ng-model="user.password"
+                   required,
+                   match="password"
+                   class="form-control"
+                   placeholder="Repeat Password"
+                  ></input>
+        </div>
+        <button type="submit" class="btn btn-login"  ng-disabled="form.$invalid">Get Started</button>
+        <p class="sign-up-link">Have an account?<a href="dash#!/login">Login now!</a></p>
     </form>
 </div>

@@ -36,7 +36,7 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
                 controller:'categoriesCtrl'
             })
             .state('products', {
-                url:'/:storeId/:categoryId/products',
+                url:'/:storeId/:categoryId/products/',
                 templateUrl:'dash/products.ejs',
                 controller:'productsCtrl',
                 onEnter: ['$state', 'auth', function($state, auth) {

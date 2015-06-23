@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Dashboard</title>
+    <link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
+
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="javascripts/controllers.js"></script>
     <script src="javascripts/app.js"></script>
@@ -10,22 +13,38 @@
 </head>
 <body ng-app="myxmap">
 <div id="header">
-    <h3>DASHBOARD</h3>
+    <h3><a href="dash#!/home">DASHBOARD</a></h3>
+    <div ng-controller="NavCtrl" class="nav" ng-show="isLoggedIn()">
+        <a href="" ng-click="logOut()">Log Out</a>
+
+        <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+    </div>
 
 </div>
 <div class="wrapper">
     <div class="left-menu">
         <div class="user-info">
             <div ng-controller="NavCtrl">
-                <h3>{{ currentUser() }}</h3>
-                <p> {{ currentId() }} </p>
-                <a href="" ng-click="logOut()">Log Out</a>
+                <p>{{ currentUser() }}</p>
             </div>
+
         </div>
-        <ul>
+        <ul ng-controller="sideCtrl">
             <li> <a href="dash#!/stores">Your Stores</a></li>
+            <ul>
+                <li ng-repeat="store in stores" class="submenu">
+                    <a href="dash#!/{{store._id}}/categories/">{{store.name}}</a>
+
+                </li>
+            </ul>
             <li> <a href="dash#!/stores">Categories</a></li>
-            <li> <a href="dash#!/stores">Products</a></li>
+
+            <ul>
+                <li ng-repeat="category in categories" class="submenu">
+                    <a href="dash#!{{store}}/{{category._id}}/products/">{{category.name}}</a>
+                </li>
+            </ul>
             <li> <a href="#">Statistics</a></li>
             <li> <a href="#">Orders</a></li>
             <li> <a href="#">Widgets</a></li>

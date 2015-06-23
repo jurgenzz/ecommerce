@@ -1,4 +1,16 @@
 angular.module('eCtrl', [])
+    .directive('match', [function () {
+        return {
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+
+                scope.$watch('[' + attrs.ngModel + ', ' + attrs.match + ']', function(value){
+                    ctrl.$setValidity('match', value[0] === value[1] );
+                }, true);
+
+            }
+        }
+    }])
 
     .controller('indexCtrl', ['$scope', '$http', 'auth', function($scope, $http, auth){
         //$http.get('http://localhost:3000/api)
@@ -8,16 +20,18 @@ angular.module('eCtrl', [])
         $scope.isLoggedIn = auth.isLoggedIn;
 
     }])
-    .controller('addCtrl', function($scope, $http, $stateParams, auth) {
+    .controller('addCtrl', function($scope, $http, $stateParams, auth, $window) {
         // $http.post('http://localhost:3000/api/products')
         $scope.currentId = auth.currentId;
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
+        var url = 'dash#!/' + $scope.storeId + '/' + $scope.catId + '/products/';
         $scope.saveProduct = function() {
             var data = $scope.product;
             $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId +"/products", data)
                 .success(function() {
                     console.log(data);
+                    $window.location.href = url;
                 })
         }
 
@@ -25,9 +39,10 @@ angular.module('eCtrl', [])
 
     })
 
-    .controller('storesCtrl', function($scope, $http, auth) {
+    .controller('storesCtrl', function($scope, $http, auth, $window) {
         $scope.currentId = auth.currentId;
         $scope.stores = "";
+        var url = 'dash#!/stores';
         $http.get('http://localhost:3000/api/user/' + $scope.currentId())
             .success(function(data){
                 $scope.stores = data.stores;
@@ -37,8 +52,10 @@ angular.module('eCtrl', [])
             $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/stores', data)
                 .success(function(data) {
                     console.log(data);
+                    $window.location.href = url;
+
                 })
-        }
+        };
     })
 
 
@@ -60,9 +77,12 @@ angular.module('eCtrl', [])
                     console.log(data);
                     $window.location.href = url;
                 })
-        }
+        };
+        $window.localStorage['shop'] = $scope.storeId;
+        console.log($window.localStorage['shop']);
+
     })
-    .controller('productsCtrl', function($scope, $http, $stateParams, auth){
+    .controller('productsCtrl', function($scope, $http, $stateParams, auth, $window){
         $scope.currentId = auth.currentId;
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
@@ -71,6 +91,7 @@ angular.module('eCtrl', [])
             .success(function(data) {
                 $scope.products = data;
                 console.log(data);
+
             })
     })
 
@@ -130,10 +151,29 @@ angular.module('eCtrl', [])
 
         auth.logOut = function(){
             $window.localStorage.removeItem('proco-news-token');
+            $window.location.href = 'dash#!/login'
         };
 
         return auth;
     }])
+    .controller('sideCtrl', function($window, $scope, $http, auth) {
+        $scope.currentId = auth.currentId;
+        var url = "http://localhost:3000/api/user/" + $scope.currentId();
+        $scope.store = "/" + $window.localStorage['shop'];
+        var category = "/" + $window.localStorage['category'];
+        var storeUrl = 'http://localhost:3000/api/user/' + $scope.currentId() + $scope.store;
+        $http.get(storeUrl)
+            .success(function(data) {
+                console.log(data);
+                $scope.categories = data.categories;
+            });
+        console.log(storeUrl);
+        $http.get(url)
+            .success(function(data) {
+                $scope.stores = data.stores;
+                console.log($scope.stores);
+            })
+    })
 
     .controller('loginCtrl', [
         '$scope',
@@ -144,6 +184,7 @@ angular.module('eCtrl', [])
 
             $scope.register = function(){
                 auth.register($scope.user).error(function(error){
+                    console.log($scope.user);
                     $scope.error = error;
                 }).then(function(){
                     $state.go('home');
@@ -151,8 +192,8 @@ angular.module('eCtrl', [])
             };
 
             $scope.logIn = function(){
-                auth.logIn($scope.user).error(function(error){
-                    $scope.error = error;
+                auth.logIn($scope.user).error(function(){
+                    $scope.error = "Hey, something went wrong. Check your email and password and try again!";
                 }).then(function(){
                     $state.go('home');
                 });
