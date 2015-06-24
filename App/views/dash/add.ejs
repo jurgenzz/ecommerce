@@ -4,7 +4,7 @@
 </div>
 
 
-<form class="add-form" ng-submit="saveProduct()">
+<form class="add-form" ng-submit="saveProduct()"  enctype="multipart/form-data" action="/api/photo"  method="post">
     <div class="form-item">
         <label>Product name</label>
         <input class="form-input" ng-model="product.name">
@@ -17,5 +17,8 @@
         <label>Price</label>
         <input class="form-input" ng-model="product.price">
     </div>
+    <div class="form-item">
+        <input type="file" name="{{catId}}_{{product.name}}" ng-model="product.image"/>
+        </div>
     <button type="submit">Submit</button>
 </form>

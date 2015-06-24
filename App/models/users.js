@@ -8,7 +8,9 @@ var userSchema = new mongoose.Schema({
     username: {type: String, lowercase: true, unique: true},
     hash: String,
     salt: String,
-    stores: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Store' }]
+    stores: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Store' }],
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }]
+
 });
 userSchema.methods.setPassword = function(password){
     this.salt = crypto.randomBytes(16).toString('hex');

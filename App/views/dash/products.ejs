@@ -1,10 +1,11 @@
-<div class="content-header">
-    <p>{{products.name}}</p>
-    <a href="dash#!/{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
+<div class="content-header" ng-controller="sideCtrl">
+    <p><a href="dash#!/stores"> {{store}} </a> / <a href="dash#!{{storeId}}/categories/">{{products.name}}</a></p>
+    <a href="dash#!{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
 </div>
 
 <div ng-repeat="product in products.products" class="product-container">
     <div class="product-box">
+        <img src="images/{{product.image}}" width="200px;"/>
         <h3>{{product.name}}</h3>
     </div>
     <a href="#" class="info">info </a><a href="#" class="edit">edit</a>

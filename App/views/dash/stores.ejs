@@ -3,6 +3,9 @@
     <a href="dash#!/stores/add" class="btn pull-right">Add Store</a>
 </div>
 
+<div ng-controller="sideCtrl">
+
+
 <div ng-repeat="store in stores">
     <a href="dash#!/{{store._id}}/categories/" ng-click="localStore()">
         {{store.name}}

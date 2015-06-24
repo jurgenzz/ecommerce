@@ -1,4 +1,4 @@
-angular.module('myxmap', ['eCtrl', 'ui.router'])
+angular.module('myxmap', ['eCtrl', 'ui.router', 'ngFileUpload'])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider){
         $locationProvider.hashPrefix('!');
         $stateProvider
@@ -14,6 +14,11 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
                     }
                 }]
 
+            })
+            .state('allProducts', {
+                url:'/all',
+                templateUrl:'dash/allProducts.ejs',
+                controller:'allProductsCtrl'
             })
             .state('stores', {
                 url:'/stores',
@@ -73,7 +78,7 @@ angular.module('myxmap', ['eCtrl', 'ui.router'])
             })
             .state('register', {
                 url: '/register',
-                templateUrl: 'dash/register.ejs',
+                templateUrl: '/register.ejs',
                 controller:'loginCtrl',
                 onEnter: ['$state', 'auth', function($state, auth){
                     if(auth.isLoggedIn()){

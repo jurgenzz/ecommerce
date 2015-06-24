@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Dashboard</title>
+    <link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="javascripts/controllers.js"></script>
+    <script src="javascripts/login.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+</head>
+<body ng-app="myxmap" ng-controller="loginCtrl">
+
+<div class="login">
+    <div class="error">
+        <p>{{error}}</p>
+    </div>
+
+    <div class="form-wrapper">
+
+
+        <form ng-submit="logIn()">
+            <p class="form-header">Log In</p>
+
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Username"
+                       ng-model="user.username"></input>
+            </div>
+            <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       placeholder="Password"
+                       ng-model="user.password"></input>
+            </div>
+            <button type="submit" class="btn btn-login" >Enter</button>
+            <p class="sign-up-link">Not a member? <a href="/register">Sign up now!</a></p>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -10,6 +10,8 @@
     <script src="javascripts/controllers.js"></script>
     <script src="javascripts/app.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <!--<script src="bower_components/ng-file-upload/ng-file-upload-shim(.min).js"></script> &lt;!&ndash; for no html5 browsers support &ndash;&gt;-->
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 </head>
 <body ng-app="myxmap">
 <div id="header">
@@ -30,21 +32,9 @@
             </div>
 
         </div>
-        <ul ng-controller="sideCtrl">
+        <ul>
             <li> <a href="dash#!/stores">Your Stores</a></li>
-            <ul>
-                <li ng-repeat="store in stores" class="submenu">
-                    <a href="dash#!/{{store._id}}/categories/">{{store.name}}</a>
-
-                </li>
-            </ul>
-            <li> <a href="dash#!/stores">Categories</a></li>
-
-            <ul>
-                <li ng-repeat="category in categories" class="submenu">
-                    <a href="dash#!{{store}}/{{category._id}}/products/">{{category.name}}</a>
-                </li>
-            </ul>
+            <li> <a href="dash#!/all">All products</a></li>
             <li> <a href="#">Statistics</a></li>
             <li> <a href="#">Orders</a></li>
             <li> <a href="#">Widgets</a></li>

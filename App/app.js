@@ -7,11 +7,15 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
+var multer  = require('multer');
+var busboy = require('busboy');
 require ('./models/users');
 require('./models/products');
 require('./config/passport');
 require('./models/categories');
 require('./models/stores');
+
+var date = Date.now();
 
 mongoose.connect('mongodb://localhost/products');
 
@@ -23,12 +27,12 @@ var routes = require('./routes/routes');
 var users = require('./routes/users');
 var Store = require('./models/stores');
 
-
 var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
 
 
 var app = express();
+done = false;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -42,8 +46,29 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+app.use(multer({ dest: './public/images',
+    rename: function (fieldname, filename) {
+        return '_' + date;
+    },
+    onFileUploadStart: function (file) {
+        console.log(file.originalname + ' is starting ...')
+    },
+    onFileUploadComplete: function (file) {
+        console.log(file.fieldname + ' uploaded to  ' + file.path)
+        done=true;
+    }
+}));
 
 var router = express.Router();
+
+app.post('/api/photo',function(req,res){
+    if(done==true){
+        console.log(req.files);
+    }
+
+});
+
+//router params for user ID
 
 router.param('user', function(req, res, next, id) {
     var query = User.findById(id);
@@ -57,6 +82,23 @@ router.param('user', function(req, res, next, id) {
     });
 });
 
+//router params to find product by user ID
+
+router.param('products', function(req, res, next, id) {
+    var query = Product.find({user:id});
+
+    query.exec(function (err, products) {
+        if (err) {return next(err);}
+        if (!products) { return next()}
+
+        req.products = products;
+        return next();
+    })
+
+});
+
+//router params to find category by ID
+
 router.param('category', function(req, res, next, id) {
     var query = Category.findById(id);
     query.exec(function(err, category){
@@ -67,6 +109,8 @@ router.param('category', function(req, res, next, id) {
         return next ();
     })
 });
+
+//router params for all stores
 
 router.param('stores', function(req, res, next, id) {
     var query = Store.findById(id);
@@ -79,6 +123,25 @@ router.param('stores', function(req, res, next, id) {
     })
 });
 
+router.param('product', function(req, res, next, id){
+    var query = Product.findById(id);
+    query.exec(function(err, products){
+        if (err) {return next(err);}
+        if(!products) {return next();}
+
+        req.product = products;
+        return next()
+    })
+});
+//get all products API
+
+router.get('/user/products/:products', function(req, res) {
+    res.json(req.products);
+
+});
+
+//get all stores from a user
+
 router.get('/user/:user', function(req, res){
     req.user.populate('stores', function(err, store) {
         if (err) {
@@ -89,6 +152,8 @@ router.get('/user/:user', function(req, res){
     });
 });
 
+//get all stores from user >> stores
+
 router.get('/user/:user/:stores/', function(req, res) {
     req.stores.populate('categories', function(err, category) {
         if (err) {
@@ -98,6 +163,7 @@ router.get('/user/:user/:stores/', function(req, res) {
     });
 });
 
+//get all products in a user >> store >> category
 
 router.get('/user/:user/:stores/:category', function(req, res) {
     req.category.populate('products', function(err, post) {
@@ -107,7 +173,15 @@ router.get('/user/:user/:stores/:category', function(req, res) {
     });
 });
 
+//get all information about product
 
+router.get('/user/:user/:stores/:category/:product', function(req, res) {
+    req.product.populate('category store', function(err, post) {
+        if (err) {return next(err);}
+
+        res.json(post);
+    })
+});
 
 router.post('/user/:user/stores', function(req, res, next) {
     var store = new Store(req.body);
@@ -140,9 +214,15 @@ router.post('/user/:user/:stores/category', function(req, res, next) {
 });
 
 
-router.post('/user/:user/:stores/:category/products', function(req, res, next) {
+router.post('/user/:user/:stores/:category/products', auth, function(req, res, next) {
     var product = new Product(req.body);
     product.post = req.post;
+    product.user = req.payload._id;
+    product.category = req.category;
+    product.store = req.stores;
+    product.storeId = req.stores._id;
+    product.categoryId = req.category._id;
+    product.image = '_' + date + '.jpg';
 
     product.save(function(err, product){
         if(err) {return next(err); }
@@ -191,11 +271,13 @@ router.post('/login', function(req, res, next){
     })(req, res, next);
 });
 
+
+
 app.use('/api', router);
 
 app.get('/', routes.index);
-//app.get('/login', routes.login);
-//app.get('/register', routes.register);
+app.get('/login', routes.login);
+app.get('/register', routes.register);
 app.get('/dash', routes.dash);
 app.get('/users', users);
 app.get('/dash/:name', routes.partials);
