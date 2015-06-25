@@ -199,6 +199,16 @@ router.get('/user/:user/:stores/:category/:product', function(req, res) {
     })
 });
 
+//remove product
+
+router.delete('/user/:user/:stores/:category/:product', function(req, res) {
+    var product = req.product;
+    product.remove(function(err, product){
+        res.send('done');
+    });
+
+});
+
 //API add store
 
 router.post('/user/:user/stores', auth, function(req, res, next) {
