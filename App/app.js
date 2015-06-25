@@ -15,7 +15,8 @@ require('./config/passport');
 require('./models/categories');
 require('./models/stores');
 
-var date = Date.now();
+var date = ""; // generate date for images in products. As in filename & db
+var filePath = "";
 
 mongoose.connect('mongodb://localhost/products');
 
@@ -29,8 +30,6 @@ var Store = require('./models/stores');
 
 var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
-
-
 var app = express();
 done = false;
 
@@ -40,26 +39,40 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+
+//
 app.use(multer({ dest: './public/images',
     rename: function (fieldname, filename) {
-        return '_' + date;
+        date = Date.now();
+        return '_' + date; //generate img name
     },
+    //i don't think any of the following works at the moment
     onFileUploadStart: function (file) {
+        filePath = file.name;
         console.log(file.originalname + ' is starting ...')
     },
     onFileUploadComplete: function (file) {
-        console.log(file.fieldname + ' uploaded to  ' + file.path)
+        console.log(file.fieldname + ' uploaded to  ' + file.path);
+
         done=true;
     }
 }));
 
 var router = express.Router();
+
+//api for img upload
 
 app.post('/api/photo',function(req,res){
     if(done==true){
@@ -123,6 +136,8 @@ router.param('stores', function(req, res, next, id) {
     })
 });
 
+//param to product by ID
+
 router.param('product', function(req, res, next, id){
     var query = Product.findById(id);
     query.exec(function(err, products){
@@ -133,6 +148,7 @@ router.param('product', function(req, res, next, id){
         return next()
     })
 });
+
 //get all products API
 
 router.get('/user/products/:products', function(req, res) {
@@ -183,7 +199,9 @@ router.get('/user/:user/:stores/:category/:product', function(req, res) {
     })
 });
 
-router.post('/user/:user/stores', function(req, res, next) {
+//API add store
+
+router.post('/user/:user/stores', auth, function(req, res, next) {
     var store = new Store(req.body);
     store.post = req.post;
 
@@ -199,7 +217,9 @@ router.post('/user/:user/stores', function(req, res, next) {
     })
 });
 
-router.post('/user/:user/:stores/category', function(req, res, next) {
+//API add category to a :store
+
+router.post('/user/:user/:stores/category', auth, function(req, res, next) {
     var category = new Category(req.body);
     category.post = req.post;
 
@@ -213,6 +233,7 @@ router.post('/user/:user/:stores/category', function(req, res, next) {
     })
 });
 
+//API add product to store >> category
 
 router.post('/user/:user/:stores/:category/products', auth, function(req, res, next) {
     var product = new Product(req.body);
@@ -222,7 +243,7 @@ router.post('/user/:user/:stores/:category/products', auth, function(req, res, n
     product.store = req.stores;
     product.storeId = req.stores._id;
     product.categoryId = req.category._id;
-    product.image = '_' + date + '.jpg';
+    product.image = filePath;
 
     product.save(function(err, product){
         if(err) {return next(err); }
@@ -236,6 +257,8 @@ router.post('/user/:user/:stores/:category/products', auth, function(req, res, n
     })
 });
 
+
+//registration
 
 router.post('/register', function(req, res, next){
     if(!req.body.username || !req.body.password){
@@ -254,6 +277,8 @@ router.post('/register', function(req, res, next){
         return res.json({token: user.generateJWT()})
     });
 });
+
+//login
 
 router.post('/login', function(req, res, next){
     if(!req.body.username || !req.body.password){
@@ -274,7 +299,6 @@ router.post('/login', function(req, res, next){
 
 
 app.use('/api', router);
-
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.get('/register', routes.register);
@@ -292,6 +316,7 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
 
 // error handlers
 

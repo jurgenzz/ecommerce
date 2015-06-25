@@ -1,48 +1,37 @@
 angular.module('eCtrl', ['ngFileUpload'])
-    .directive('match', [function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, elem, attrs, ctrl) {
 
-                scope.$watch('[' + attrs.ngModel + ', ' + attrs.match + ']', function(value){
-                    ctrl.$setValidity('match', value[0] === value[1] );
-                }, true);
-
-            }
-        }
-    }])
 
     .controller('indexCtrl', ['$scope', '$http', 'auth', function($scope, $http, auth){
-        //$http.get('http://localhost:3000/api)
-        //    .success(function(data){
-        //        console.log(data);
-        //    })
+        //check if logged in
         $scope.isLoggedIn = auth.isLoggedIn;
 
     }])
 
     .controller('allProductsCtrl', function($scope, $http, auth) {
         $scope.currentId = auth.currentId;
-        $http.get('http://localhost:3000/api/user/products/' + $scope.currentId())
+        $http.get('http://104.131.89.50:3000/api/user/products/' + $scope.currentId())
             .success(function(data){
                 $scope.products = data;
-                console.log(data);
+                //console.log(data);
+            })
+            .error(function() {
+                $scope.message = 'Add some products first';
             })
     })
     .controller('addCtrl', function($scope, $http, $stateParams, auth, $window) {
-        // $http.post('http://localhost:3000/api/products')
+        // $http.post('http://104.131.89.50:3000/api/products')
         $scope.currentId = auth.currentId;
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
         var url = 'dash#!/' + $scope.storeId + '/' + $scope.catId + '/products/';
         $scope.saveProduct = function() {
             var data = $scope.product;
-            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId +"/products"
+            $http.post('http://104.131.89.50:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId +"/products"
                 , data, {
                     headers: {Authorization: 'Bearer '+auth.getToken()}
                 })
                 .success(function() {
-                    console.log(data);
+                    //console.log(data);
                     $window.location.href = url;
                 })
         }
@@ -52,18 +41,24 @@ angular.module('eCtrl', ['ngFileUpload'])
         $scope.currentId = auth.currentId;
         $scope.stores = "";
         var url = 'dash#!/stores';
-        $http.get('http://localhost:3000/api/user/' + $scope.currentId())
+        $http.get('http://104.131.89.50:3000/api/user/' + $scope.currentId())
             .success(function(data){
                 $scope.stores = data.stores;
+            })
+            .error(function() {
+                $scope.message = 'Add some products first';
             });
         $scope.saveStore = function() {
             var data = $scope.stories;
-            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/stores', data)
+            $http.post('http://104.131.89.50:3000/api/user/' + $scope.currentId() + '/stores', data, {
+                headers: {Authorization: 'Bearer '+auth.getToken()}
+            })
                 .success(function(data) {
-                    console.log(data);
+                    //console.log(data);
                     $window.location.href = url;
 
                 })
+
         };
     })
 
@@ -72,23 +67,25 @@ angular.module('eCtrl', ['ngFileUpload'])
         $scope.currentId = auth.currentId;
         $scope.storeId = $stateParams.storeId;
         $scope.categories = "";
-        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + "/" + $scope.storeId)
+        $http.get('http://104.131.89.50:3000/api/user/' + $scope.currentId() + "/" + $scope.storeId)
             .success(function(data) {
                 $scope.categories = data;
                 $window.localStorage['shop'] = data.name;
-                console.log(data);
+                //console.log(data);
             });
         $scope.saveCategory = function() {
             var storeId = $stateParams.storeId;
             var data = $scope.category;
             var url = 'dash#!/' + storeId + '/categories/';
-            $http.post('http://localhost:3000/api/user/' + $scope.currentId() + '/' + storeId + '/category', data)
+            $http.post('http://104.131.89.50:3000/api/user/' + $scope.currentId() + '/' + storeId + '/category', data, {
+                headers: {Authorization: 'Bearer '+auth.getToken()}
+            })
                 .success(function(data) {
-                    console.log(data);
+                    //console.log(data);
                     $window.location.href = url;
                 })
         };
-        console.log($window.localStorage['shop']);
+        //console.log($window.localStorage['shop']);
         $window.localStorage['shopId'] = $scope.storeId;
 
     })
@@ -97,117 +94,61 @@ angular.module('eCtrl', ['ngFileUpload'])
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
         $scope.products = "";
-        $http.get('http://localhost:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId)
+        $http.get('http://104.131.89.50:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId)
             .success(function(data) {
                 $scope.products = data;
-                console.log(data);
+                //console.log(data);
 
             })
+
+            .error(function() {
+                $scope.message = 'Add some products first';
+            })
+    })
+    .controller('productCtrl', function($scope, $http, $stateParams, auth){
+        $scope.currentId = auth.currentId;
+        $scope.storeId = $stateParams.storeId;
+        $scope.catId = $stateParams.categoryId;
+        $scope.productId = $stateParams.productId;
+        $scope.products ="";
+        $http.get('http://104.131.89.50:3000/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId + '/' + $scope.productId)
+            .success(function(data) {
+                $scope.products = data;
+                $scope.category = data.category;
+                $scope.store = data.store;
+                //console.log(data.category);
+            })
+            .error(function() {
+                $scope.message = 'Add some products first';
+            })
+
     })
 
-    .factory('auth', ['$http', '$window', function($http, $window){
-        var auth = {};
 
-        auth.saveToken = function (token){
-            $window.localStorage['proco-news-token'] = token;
-        };
-
-        auth.getToken = function(){
-            return $window.localStorage['proco-news-token'];
-        };
-
-        auth.isLoggedIn = function() {
-            var token = auth.getToken();
-
-            if(token){
-                var payload = JSON.parse($window.atob(token.split('.')[1]));
-
-                return payload.exp > Date.now() / 1000;
-            }else{
-                return false;
-            }
-        };
-
-        auth.currentUser = function(){
-            if(auth.isLoggedIn()) {
-                var token = auth.getToken();
-                var payload = JSON.parse($window.atob(token.split('.')[1]));
-
-                return payload.username;
-            }
-        };
-
-        auth.currentId = function() {
-            if(auth.isLoggedIn()) {
-                var token = auth.getToken();
-                var payload = JSON.parse($window.atob(token.split('.')[1]));
-
-                return payload._id;
-            }
-        };
-
-
-        auth.register = function(user){
-            return $http.post('api/register', user).success(function(data){
-                auth.saveToken(data.token);
-            });
-        };
-
-        auth.logIn = function(user){
-            return $http.post('api/login', user).success(function(data){
-                auth.saveToken(data.token);
-            });
-        };
-
-        auth.logOut = function(){
-            $window.localStorage.removeItem('proco-news-token');
-            $window.location.href = '/'
-        };
-
-        return auth;
-    }])
     .controller('sideCtrl', function($window, $scope, $http, auth) {
         $scope.currentId = auth.currentId;
-        var url = "http://localhost:3000/api/user/" + $scope.currentId();
+        var url = "http://104.131.89.50:3000/api/user/" + $scope.currentId();
         $scope.store = $window.localStorage['shop'];
         $scope.storeId = "/" + $window.localStorage['shopId'];
-        console.log($scope.store);
+        //console.log($scope.store);
         var category = "/" + $window.localStorage['category'];
-        var storeUrl = 'http://localhost:3000/api/user/' + $scope.currentId() + $scope.storeId;
+        var storeUrl = 'http://104.131.89.50:3000/api/user/' + $scope.currentId() + $scope.storeId;
         $http.get(storeUrl)
             .success(function(data) {
-                console.log(data);
+                //console.log(data);
                 $scope.categories = data.categories;
+            })
+            .error(function() {
+                $scope.message = 'Add some products first';
             });
-        console.log(storeUrl);
+        //console.log(storeUrl);
         $http.get(url)
             .success(function(data) {
                 $scope.stores = data.stores;
-                console.log($scope.stores);
+                //console.log($scope.stores);
             })
     })
 
-    .controller('loginCtrl', function($scope, $state, auth, $window){
-        $scope.user = {};
-
-        $scope.register = function(){
-            auth.register($scope.user).error(function(error){
-                console.log($scope.user);
-                $scope.error = "Please, fill out all fields!"
-            }).then(function(){
-                $state.go('home');
-                $window.location.href = 'dash#!/login'
-            });
-        };
-
-        $scope.logIn = function(){
-            auth.logIn($scope.user).error(function(){
-                $scope.error = "Hey, something went wrong. Check your email and password and try again!";
-            }).then(function(){
-                $window.location.href = 'dash#!/login'
-            });
-        };
-    })
 
     .controller('NavCtrl', [
         '$scope',
@@ -217,4 +158,16 @@ angular.module('eCtrl', ['ngFileUpload'])
             $scope.currentUser = auth.currentUser;
             $scope.currentId = auth.currentId;
             $scope.logOut = auth.logOut;
-        }]);
+        }])
+
+    .controller('apiCtrl', function($scope, auth) {
+        $scope.id = auth.currentId();
+    })
+    .controller('demoCtrl', function($scope, auth, $http, $stateParams) {
+        $scope.currentId = auth.currentId;
+        $http.get('http://104.131.89.50:3000/api/user/products/' + $scope.currentId())
+            .success(function(data){
+                $scope.products = data;
+                //console.log(data);
+            })
+    });

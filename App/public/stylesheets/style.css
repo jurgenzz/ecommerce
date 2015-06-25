@@ -9,7 +9,7 @@ body {
 }
 
 a {
-    color: inherit;
+    color:#aa5353;
 }
 
 a:hover {
@@ -29,6 +29,11 @@ a:hover {
 #header h3 {
     float:left;
     margin-left:15px;
+    color:inherit;
+}
+
+#header a {
+    color:inherit;
 }
 
 .nav {

@@ -4,10 +4,11 @@
 </div>
 
 <div ng-controller="sideCtrl">
-
+</div>
+{{message}}
 
 <div ng-repeat="store in stores">
     <a href="dash#!/{{store._id}}/categories/" ng-click="localStore()">
-        {{store.name}}
+        <button class="btn-home">{{store.name}}</button>
     </a>
 </div>

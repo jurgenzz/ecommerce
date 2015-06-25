@@ -1,8 +1,9 @@
 
-
+<img src="images/_1435156755501.jpg">
 
 <div ng-repeat="product in products" class="product-container">
     <div class="product-box">
+        <img ng-src='/images/{{product.image}}'/>
         <h3>{{product.name}}</h3>
     </div>
     <a href="#" class="info">info </a><a href="#" class="edit">edit</a>

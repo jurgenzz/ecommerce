@@ -1,5 +1,5 @@
 <div class="content-header">
-    <h3>Store Name</h3>
+    <p>Add Product</p>
     <a href="dash#!/{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
 </div>
 
@@ -18,7 +18,7 @@
         <input class="form-input" ng-model="product.price">
     </div>
     <div class="form-item">
-        <input type="file" name="{{catId}}_{{product.name}}" ng-model="product.image"/>
+        <input type="file" name="{{product.name}}" ng-model="product.image"/>
         </div>
     <button type="submit">Submit</button>
 </form>
