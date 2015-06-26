@@ -6,9 +6,10 @@
 <div ng-controller="sideCtrl">
 </div>
 {{message}}
-
-<div ng-repeat="store in stores">
+<h4>Your stores:</h4>
+<div ng-repeat="store in stores" class="list">
     <a href="dash#!/{{store._id}}/categories/" ng-click="localStore()">
-        <button class="btn-home">{{store.name}}</button>
-    </a>
+
+       {{store.name}}
+    </a><div class="pull-right">Info / Edit / Delete</div>
 </div>

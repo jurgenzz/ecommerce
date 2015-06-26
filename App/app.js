@@ -27,6 +27,7 @@ var Category = require('./models/categories');
 var routes = require('./routes/routes');
 var users = require('./routes/users');
 var Store = require('./models/stores');
+var Order = require('./models/orders');
 
 var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
@@ -110,6 +111,20 @@ router.param('products', function(req, res, next, id) {
 
 });
 
+//router.param.to find orders by user ID
+
+router.param('orders', function(req, res, next, id) {
+    var query = Order.find({user:id});
+
+    query.exec(function (err, orders) {
+        if (err) {return next(err);}
+        if (!orders) { return next(); }
+
+        req.orders = orders;
+        return next();
+    })
+});
+
 //router params to find category by ID
 
 router.param('category', function(req, res, next, id) {
@@ -147,6 +162,19 @@ router.param('product', function(req, res, next, id){
         req.product = products;
         return next()
     })
+});
+
+//param to order ID
+
+router.param('order', function(req, res, next, id) {
+    var query = Order.findById(id);
+    query.exec(function(err, orders) {
+        if (err) {return next(err);}
+        if(!orders) {return next();}
+
+        req.order = orders;
+        return next();
+    });
 });
 
 //get all products API
@@ -199,6 +227,12 @@ router.get('/user/:user/:stores/:category/:product', function(req, res) {
     })
 });
 
+//API get all orders
+
+router.get('/order/:orders', function(req, res) {
+    res.json(req.orders);
+});
+
 //remove product
 
 router.delete('/user/:user/:stores/:category/:product', function(req, res) {
@@ -206,6 +240,23 @@ router.delete('/user/:user/:stores/:category/:product', function(req, res) {
     product.remove(function(err, product){
         res.send('done');
     });
+
+});
+
+//edit product
+
+router.put('/user/:user/:stores/:category/:product', function(req, res){
+    var product = req.product;
+
+    product.name = req.body.name;
+    product.desc = req.body.desc;
+    product.price = req.body.price;
+
+
+    product.save(function(){
+        res.json({message:'Updated'})
+
+    })
 
 });
 
@@ -247,13 +298,13 @@ router.post('/user/:user/:stores/category', auth, function(req, res, next) {
 
 router.post('/user/:user/:stores/:category/products', auth, function(req, res, next) {
     var product = new Product(req.body);
-    product.post = req.post;
     product.user = req.payload._id;
     product.category = req.category;
     product.store = req.stores;
     product.storeId = req.stores._id;
     product.categoryId = req.category._id;
     product.image = filePath;
+    product.url = 'http://localhost:3000/orders#!/order/' + product.user +'/' + product._id + '/info/' + product.storeId + '/' + product.categoryId;;
 
     product.save(function(err, product){
         if(err) {return next(err); }
@@ -266,6 +317,23 @@ router.post('/user/:user/:stores/:category/products', auth, function(req, res, n
         })
     })
 });
+
+//API add order
+
+router.post('/order/:user/:product', function(req, res, next) {
+    var order = new Order(req.body);
+    order.name = req.body.name;
+    order.product = req.product;
+    order.user = req.user._id;
+
+    order.save(function(err, order){
+        if(err) {return next(err);}
+
+        return res.json(order);
+    })
+});
+
+
 
 
 //registration
@@ -315,6 +383,8 @@ app.get('/register', routes.register);
 app.get('/dash', routes.dash);
 app.get('/users', users);
 app.get('/dash/:name', routes.partials);
+app.get('/orders', routes.order);
+app.get('/orders/:name', routes.orders);
 app.get('*', routes.index);
 
 

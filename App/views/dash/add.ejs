@@ -9,16 +9,20 @@
         <label>Product name</label>
         <input class="form-input" ng-model="product.name">
     </div>
+
+
+    <div class="form-item">
+        <label>
+            <input type="file" name="{{product.name}}" ng-model="product.image" id="addbtn"/>
+        </label>
+    </div>
     <div class="form-item">
         <label>Product Description</label>
-        <input class="form-input" ng-model="product.desc">
+        <textarea class="form-input" ng-model="product.desc"/></textarea>
     </div>
     <div class="form-item">
         <label>Price</label>
-        <input class="form-input" ng-model="product.price">
+        <input class="form-input price" ng-model="product.price">
     </div>
-    <div class="form-item">
-        <input type="file" name="{{product.name}}" ng-model="product.image"/>
-        </div>
     <button type="submit">Submit</button>
 </form>

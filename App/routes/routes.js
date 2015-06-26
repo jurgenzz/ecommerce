@@ -20,3 +20,12 @@ exports.login = function(req, res) {
 exports.register = function(req, res) {
     res.render('register')
 };
+
+exports.order = function(req, res) {
+    res.render('orders/order')
+};
+
+exports.orders = function (req, res) {
+    var name = req.params.name;
+    res.render('orders/' + name);
+};

@@ -5,7 +5,11 @@
 
 
 
-
-<div ng-repeat="category in categories.categories">
-      <a href="dash#!/{{storeId}}/{{category._id}}/products/"><button class="btn-home">{{category.name}}</button></a>
+{{message}}
+<h4>Categories in {{categories.name}}:</h4>
+<div ng-repeat="category in categories.categories" class="list">
+      <a href="dash#!/{{storeId}}/{{category._id}}/products/">
+          {{category.name}}
+      </a>
+    <div class="pull-right">Info / Edit / Delete</div>
     </div>

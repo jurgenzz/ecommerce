@@ -10,7 +10,8 @@ var ProductSchema = new Schema({
     categoryId: String,
     image: String,
     store: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Store' }],
-    category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }]
+    category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+    url: String
 });
 
 module.exports = mongoose.model('Product', ProductSchema);

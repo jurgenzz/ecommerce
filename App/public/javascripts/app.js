@@ -1,4 +1,4 @@
-angular.module('myxmap', ['eCtrl', 'ui.router', 'userFactory', 'ngFileUpload'])
+angular.module('myxmap', ['eCtrl', 'ui.router', 'userFactory', 'ngFileUpload', 'flash'])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider){
         $locationProvider.hashPrefix('!');
         $stateProvider
@@ -30,6 +30,7 @@ angular.module('myxmap', ['eCtrl', 'ui.router', 'userFactory', 'ngFileUpload'])
                 onEnter: ['$state', 'auth', '$window', function($state, auth, $window) {
                     if(!auth.isLoggedIn()){
                         $window.location.href = '/login';
+
                     }
                 }]
             })
@@ -83,10 +84,30 @@ angular.module('myxmap', ['eCtrl', 'ui.router', 'userFactory', 'ngFileUpload'])
                     }
                 }]
             })
+            .state('editProduct', {
+                url:'/:storeId/:categoryId/:productId/edit',
+                templateUrl:'dash/edit.ejs',
+                controller:'productCtrl',
+                onEnter: ['$state', 'auth', '$window', function($state, auth, $window) {
+                    if(!auth.isLoggedIn()){
+                        $window.location.href = '/login';
+                    }
+                }]
+            })
             .state('api', {
                 url:'/api',
                 templateUrl:'dash/api.ejs',
                 controller:'apiCtrl',
+                onEnter: ['$state', 'auth', '$window', function($state, auth, $window) {
+                    if(!auth.isLoggedIn()){
+                        $window.location.href = '/login';
+                    }
+                }]
+            })
+            .state('orders', {
+                url:'/orders',
+                templateUrl:'dash/orders.ejs',
+                controller:'orderCtrl',
                 onEnter: ['$state', 'auth', '$window', function($state, auth, $window) {
                     if(!auth.isLoggedIn()){
                         $window.location.href = '/login';

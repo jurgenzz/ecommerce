@@ -13,6 +13,7 @@
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <!--<script src="bower_components/ng-file-upload/ng-file-upload-shim(.min).js"></script> &lt;!&ndash; for no html5 browsers support &ndash;&gt;-->
     <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="bower_components/angular-flash-alert/dist/angular-flash.min.js"></script>
 </head>
 <body ng-app="myxmap">
 <div id="header">
@@ -25,19 +26,20 @@
     </div>
 
 </div>
-<div class="wrapper">
-    <div class="left-menu">
-        <div class="user-info">
-            <div ng-controller="NavCtrl">
-                <p>{{ currentUser() }}</p>
-            </div>
+<div class="wrapper container">
 
-        </div>
+    <div class="left-menu container">
+       <!--< <div class="user-info">-->
+            <!--<div ng-controller="NavCtrl">-->
+                <!--<p>{{ currentUser() }}</p>-->
+            <!--</div>-->
+
+        <!--</div>-->
         <ul>
             <li> <a href="dash#!/stores">Your Stores</a></li>
             <li> <a href="dash#!/all">All products</a></li>
             <li> <a href="#">Statistics</a></li>
-            <li> <a href="#">Orders</a></li>
+            <li> <a href="dash#!/orders">Orders</a></li>
             <li> <a href="#">Widgets</a></li>
             <li> <a href="dash#!/api">API</a></li>
 
@@ -46,7 +48,7 @@
 
 
     <div class="content">
-
+        <div flash-message="5000" ></div>
 
         <div ui-view></div>
 
