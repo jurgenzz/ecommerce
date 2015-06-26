@@ -11,6 +11,10 @@ Clone:
 ```
 git clone https://github.com/jurgenzz/ecommerce.git
 ```
+cd in app folder
+```
+cd app
+```
 Install node dependencies:
 ```
 npm install
