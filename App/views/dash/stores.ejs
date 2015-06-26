@@ -1,0 +1,15 @@
+<div class="content-header">
+    <p>Stores</p>
+    <a href="dash#!/stores/add" class="btn pull-right">Add Store</a>
+</div>
+
+<div ng-controller="sideCtrl">
+</div>
+{{message}}
+<h4>Your stores:</h4>
+<div ng-repeat="store in stores" class="list">
+    <a href="dash#!/{{store._id}}/categories/" ng-click="localStore()">
+
+       {{store.name}}
+    </a><div class="pull-right">Info / Edit / Delete</div>
+</div>

@@ -1,0 +1,21 @@
+<div class="content-header">
+    <p>Add Product</p>
+    <a href="dash#!/{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
+</div>
+
+
+<form class="add-form" ng-submit="edit()"  enctype="multipart/form-data" action="/api/photo"  method="post">
+    <div class="form-item">
+        <label>Product name</label>
+        <input type="text" class="form-input" ng-model="product.name" value="{{products.name}}">
+    </div>
+    <div class="form-item">
+        <label>Product Description</label>
+        <textarea class="form-input" ng-model="product.desc" value="{{products.desc}}"/></textarea>
+    </div>
+    <div class="form-item">
+        <label>Price</label>
+        <input class="form-input price" ng-model="product.price" value="{{products.price}}">
+    </div>
+    <button type="submit">Submit</button>
+</form>

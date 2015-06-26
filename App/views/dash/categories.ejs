@@ -1,0 +1,15 @@
+<div class="content-header">
+    <p><a href="dash#!/stores">{{categories.name}}</a> /</p>
+    <a href="dash#!/{{storeId}}/categories/add" class="btn pull-right">Add Category</a>
+</div>
+
+
+
+{{message}}
+<h4>Categories in {{categories.name}}:</h4>
+<div ng-repeat="category in categories.categories" class="list">
+      <a href="dash#!/{{storeId}}/{{category._id}}/products/">
+          {{category.name}}
+      </a>
+    <div class="pull-right">Info / Edit / Delete</div>
+    </div>

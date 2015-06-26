@@ -1,0 +1,30 @@
+<div class="content-header" ng-controller="sideCtrl">
+    <p><a href="dash#!/stores"> {{store}} </a> / <a href="dash#!{{storeId}}/categories/">{{category[0].name}}</a>
+        <a href="dash#!{{storeId}}/{{catId}}/products/"> / Products</a></p>
+    <a href="dash#!{{storeId}}/{{catId}}/products/add" class="btn pull-right">Add Product</a>
+    <a href="dash#!{{storeId}}/{{catId}}/{{products._id}}/edit" class="btn pull-right">Edit</a>
+    <a ng-click="delete()" class="btn pull-right">Delete</a>
+</div>
+
+
+<div class="product-wrapper row">
+
+    <div class="col-md-6">
+        product name: <strong>{{products.name}}</strong>
+        <br>
+        product price: <strong>{{products.price}}</strong>
+
+        <br>
+        product category: <strong>{{category[0].name}}</strong>
+        <br>
+        product in store:<strong> {{products.store[0].name}}</strong>
+        <br><br>
+        product desc: <p style="white-space: pre;">{{products.desc}}</p>
+
+    </div>
+    <div class="col-md-6">
+        <img src='images/{{products.image}}' width="300px;"/>
+    </div>
+</div>
+
+<a href="{{products.url}}">Order</a>

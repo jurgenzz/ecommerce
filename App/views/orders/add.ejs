@@ -1,0 +1,41 @@
+
+<div class="login">
+    <div class="error">
+        <p>{{error}}</p>
+    </div>
+
+    <div class="form-wrapper">
+
+
+        <form ng-submit="addOrder()">
+            <p class="form-header">Place an order</p>
+
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="name"
+                       ng-model="order.name"></input>
+            </div>
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Email"
+                       ng-model="order.email"></input>
+            </div>
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Amount"
+                       ng-model="order.count"></input>
+            </div>
+            <div class="form-group">
+                <input type="text"
+                       class="form-control"
+                       placeholder="Comments"
+                       ng-model="user.comments"></input>
+            </div>
+
+            <button type="submit" class="btn btn-login">Order</button>
+        </form>
+    </div>
+</div>
