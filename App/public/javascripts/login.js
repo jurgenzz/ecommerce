@@ -33,8 +33,7 @@ angular.module('myxmap', ['userFactory', 'ui.router'])
 
         $scope.register = function(){
             auth.register($scope.user).error(function(error){
-                console.log(error);
-                $scope.error = "Hey, something is not right! Maybe try different email?";
+                $scope.error = error.message;
 
             }).then(function(){
                 $window.location.href = 'dash#!/login'

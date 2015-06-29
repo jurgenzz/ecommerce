@@ -29,3 +29,15 @@ exports.orders = function (req, res) {
     var name = req.params.name;
     res.render('orders/' + name);
 };
+
+exports.docs = function (req, res) {
+    res.render('docs/index')
+};
+
+exports.started = function (req, res) {
+    res.render('docs/started')
+};
+
+exports.about = function (req, res) {
+    res.render('docs/about')
+};

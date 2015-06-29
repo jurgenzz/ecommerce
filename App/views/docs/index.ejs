@@ -1,0 +1,44 @@
+<html>
+
+<head>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<link rel="stylesheet" href="/stylesheets/style.css">
+	<link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootstrap.min.css' />
+	<script src="javascripts/indexjs/app.js"></script>
+	<script src="bower_components/angular-highlightjs/build/angular-highlightjs.js"></script>
+	<!--<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css">-->
+	<link rel="stylesheet" href="/stylesheets/railscasts.css" type="text/css">
+	<script src="bower_components/highlightjs//highlight.pack.js"></script>
+
+</head>
+
+<body ng-app="indexApp" ng-controller="docsCtrl">
+<div class="container">
+
+    <br/>
+
+    <blockquote>How to use API</blockquote>
+    <p>First, we will go trough available API calls</p>
+
+    <p>Get user information:</p>
+
+    <div hljs class="link">/api/user/$YOUR_EMAIL</div>
+    Here, in response, you can see your user ID, your e-mail and your stores:
+    <div hljs source="toPrettyJSON(user, tabWidth)">
+    </div>
+    <p>Example on how to se this in Angular Controller:
+    <div hljs>
+var userId = "test@mail.com";
+$scope.stores = "";
+$http.get('/api/user/' + userId)
+   .success(function(data){
+        $scope.stores = data.stores
+   })
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

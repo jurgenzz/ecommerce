@@ -1,0 +1,16 @@
+get started
+
+req.user.populate('stores', function(err, store) {
+if (err) {
+return next(err);
+}
+
+res.json(store);
+});
+
+
+{
+"username": user.username,
+"products": user.products,
+"stores": user.stores,
+};

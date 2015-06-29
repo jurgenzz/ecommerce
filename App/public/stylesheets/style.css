@@ -368,25 +368,26 @@ input.form-control {
 }
 
 .homepage {
-    background: #252E32;
+    background: #ececec;
     text-align:center;
 }
 
-.header .btn {
-    background:#aa5353;
-    border:none;
-    border-bottom:2px solid #7b2626;
+.header {
+    height:200px;
+    background:#373737;
 }
 
-.header .btn:hover {
-    background: #844242;
+.h-logo {
+    margin-top:-70px;
 }
 
-.header-btn {
-    margin-top:5px;
+.homepage a{
+    color:#373737;
+    font-size:1.8em;
+    font-family: 'Yantramanav', sans-serif;
+    font-weight:100;
 }
 
-.home-stuff {
-    margin-top:50px;
-    color:#fff;
+.bracket {
+    font-size:1em;
 }

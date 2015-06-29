@@ -85,7 +85,7 @@ app.post('/api/photo',function(req,res){
 //router params for user ID
 
 router.param('user', function(req, res, next, id) {
-    var query = User.findById(id);
+    var query = User.findOne({emails:id}, {hash:0, salt:0});
 
     query.exec(function (err, user){
         if (err) { return next(err); }
@@ -187,13 +187,12 @@ router.get('/user/products/:products', function(req, res) {
 //get all stores from a user
 
 router.get('/user/:user', function(req, res){
-    req.user.populate('stores', function(err, store) {
+    req.user.populate('stores', function(err, category) {
         if (err) {
             return next(err);
         }
-
-        res.json(store);
-    });
+        res.json(category);
+    })
 });
 
 //get all stores from user >> stores
@@ -339,13 +338,16 @@ router.post('/order/:user/:product', function(req, res, next) {
 //registration
 
 router.post('/register', function(req, res, next){
-    if(!req.body.username || !req.body.password){
+    if(!req.body.emails || !req.body.password ){
         return res.status(400).json({message: 'Please fill out all fields'});
+    }
+    if(req.body.password.length < 8){
+        return res.status(400).json({message: 'Password needs to be at lest 8 characters long!'});
     }
 
     var user = new User();
 
-    user.username = req.body.username;
+    user.emails = req.body.emails;
 
     user.setPassword(req.body.password);
 
@@ -359,7 +361,7 @@ router.post('/register', function(req, res, next){
 //login
 
 router.post('/login', function(req, res, next){
-    if(!req.body.username || !req.body.password){
+    if(!req.body.emails || !req.body.password){
         return res.status(400).json({message: 'Please fill out all fields'});
     }
 
@@ -385,6 +387,9 @@ app.get('/users', users);
 app.get('/dash/:name', routes.partials);
 app.get('/orders', routes.order);
 app.get('/orders/:name', routes.orders);
+app.get('/docs', routes.docs);
+app.get('/getstarted', routes.started);
+app.get('/about', routes.about);
 app.get('*', routes.index);
 
 
