@@ -29,7 +29,7 @@ angular.module('userFactory', [])
             var token = auth.getToken();
             var payload = JSON.parse($window.atob(token.split('.')[1]));
 
-            return payload.emails;
+            return payload.username;
         }
     };
 

@@ -19,7 +19,7 @@ angular.module('myxmap', [ 'ui.router'])
         console.log('indexCtrl')
     })
 
-    .controller('orderCtrl', function($scope, $stateParams, $http){
+    .controller('orderCtrl', function($scope, $stateParams, $http, $window){
         $scope.currentId = $stateParams.userId;
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
@@ -36,6 +36,8 @@ angular.module('myxmap', [ 'ui.router'])
             $http.post('/api/order/' + $scope.currentId + '/' + $scope.productId, data)
                 .success(function(){
                     console.log(data);
+                }).then(function(){
+                    $window.location.href = 'dash#!/login'
                 });
         }
     });

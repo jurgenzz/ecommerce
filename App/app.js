@@ -85,7 +85,7 @@ app.post('/api/photo',function(req,res){
 //router params for user ID
 
 router.param('user', function(req, res, next, id) {
-    var query = User.findOne({emails:id}, {hash:0, salt:0});
+    var query = User.findOne({_id:id}, {hash:0, salt:0});
 
     query.exec(function (err, user){
         if (err) { return next(err); }
@@ -228,7 +228,7 @@ router.get('/user/:user/:stores/:category/:product', function(req, res) {
 
 //API get all orders
 
-router.get('/order/:orders', function(req, res) {
+router.get('/order/:orders/', function(req, res) {
     res.json(req.orders);
 });
 
@@ -324,6 +324,8 @@ router.post('/order/:user/:product', function(req, res, next) {
     order.name = req.body.name;
     order.product = req.product;
     order.user = req.user._id;
+    order.productName = req.product.name;
+    order.process = 0;
 
     order.save(function(err, order){
         if(err) {return next(err);}
@@ -338,7 +340,7 @@ router.post('/order/:user/:product', function(req, res, next) {
 //registration
 
 router.post('/register', function(req, res, next){
-    if(!req.body.emails || !req.body.password ){
+    if(!req.body.username || !req.body.password ){
         return res.status(400).json({message: 'Please fill out all fields'});
     }
     if(req.body.password.length < 8){
@@ -347,7 +349,7 @@ router.post('/register', function(req, res, next){
 
     var user = new User();
 
-    user.emails = req.body.emails;
+    user.username = req.body.username;
 
     user.setPassword(req.body.password);
 
@@ -361,7 +363,7 @@ router.post('/register', function(req, res, next){
 //login
 
 router.post('/login', function(req, res, next){
-    if(!req.body.emails || !req.body.password){
+    if(!req.body.username || !req.body.password){
         return res.status(400).json({message: 'Please fill out all fields'});
     }
 

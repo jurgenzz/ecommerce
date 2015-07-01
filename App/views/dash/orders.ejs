@@ -1,5 +1,17 @@
-test
 
-<div ng-repeat="order in orders">
-    {{order.email}}
+</div>
+
+
+<div ng-repeat="order in orders" class="list row">
+    <div class="col-md-3">
+        <a href="" ng-click="localStore()">{{order.email}}</a>
     </div>
+    <div class="col-md-3">{{order.name}}</div>
+    <div class="col-md-3">{{order.productName}}</div>
+    <div class="col-md-1">{{order.count}}</div>
+    <!--<div class="col-md-2">See more</div>-->
+    <div ng-if="order.process==0" class="col-md-2">Nothing here</div>
+    <div ng-if="order.process==1">Yup</div>
+
+
+</div>

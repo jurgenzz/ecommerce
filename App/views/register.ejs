@@ -22,12 +22,12 @@
     <form ng-submit="register()" name="form" novalidate>
         <p class="form-header">Sign Up</p>
 
-        <div class="form-group" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
-            <input type="email"
-                   name="email"
+        <div class="form-group" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine }">
+            <input type=username"
+                   name="username"
                    class="form-control"
-                   placeholder="Email"
-                   ng-model="user.emails"></input>
+                   placeholder="Username"
+                   ng-model="user.username"></input>
         </div>
         <div class="form-group">
             <input type="password"

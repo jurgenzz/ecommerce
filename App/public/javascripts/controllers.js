@@ -199,7 +199,7 @@ angular.module('eCtrl', ['ngFileUpload'])
     .controller('orderCtrl', function($scope, auth, $stateParams, $http) {
         console.log('ordersCtrl');
         $scope.currentId = auth.currentId;
-        var url = '/api/order/' + $scope.currentId();
+        var url = '/api/order/' + $scope.currentId() + '/';
         $http.get(url)
             .success(function(data) {
                 $scope.orders = data;

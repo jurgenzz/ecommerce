@@ -7,7 +7,9 @@ var OrdersSchema = new Schema({
     count: String,
     productId: String,
     product: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-    user: String
+    user: String,
+    productName: String,
+    process: Boolean
 });
 
 module.exports = mongoose.model('Orders', OrdersSchema);
