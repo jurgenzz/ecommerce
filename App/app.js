@@ -317,6 +317,12 @@ router.post('/user/:user/:stores/:category/products', auth, function(req, res, n
         })
     })
 });
+
+router.get('/test', function(req, res, next) {
+    Test.find().exec(function(err, users){
+        res.send(users);
+    });
+});
 router.post('/test', function(req, res, next) {
     var test = new Test(req.body);
 
