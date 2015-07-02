@@ -116,14 +116,13 @@ angular.module('eCtrl', ['ngFileUpload'])
         $scope.storeId = $stateParams.storeId;
         $scope.catId = $stateParams.categoryId;
         $scope.productId = $stateParams.productId;
-        $scope.products ="";
+        $scope.product ="";
         var url = '/api/user/' + $scope.currentId() + '/' + $scope.storeId + '/' + $scope.catId + '/' + $scope.productId;
         $http.get(url)
             .success(function(data) {
-                $scope.products = data;
+                $scope.product = data;
                 $scope.category = data.category;
                 $scope.store = data.store;
-                //console.log(data.category);
             })
             .error(function() {
                 $scope.message = 'Add some products first';
@@ -138,7 +137,9 @@ angular.module('eCtrl', ['ngFileUpload'])
                 })
         };
         $scope.edit = function() {
-            var data= $scope.product;
+            $scope.product = $scope.products;
+
+            var data = $scope.products;
             $http.put(url, data)
                 .success(function() {
                     $window.location.href = 'dash#!/' + $scope.storeId + '/' + $scope.catId + '/' + $scope.productId + '/info';
