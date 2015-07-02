@@ -28,6 +28,7 @@ var routes = require('./routes/routes');
 var users = require('./routes/users');
 var Store = require('./models/stores');
 var Order = require('./models/orders');
+var Test = require('./models/test');
 
 var auth = jwt({secret: 'jurgenz', userProperty: 'payload'});
 
@@ -316,6 +317,16 @@ router.post('/user/:user/:stores/:category/products', auth, function(req, res, n
         })
     })
 });
+router.post('/test', function(req, res, next) {
+    var test = new Test(req.body);
+
+    test.save(function(err, test) {
+        if(err) {return next(err);}
+
+        return res.json(test);
+    })
+});
+
 
 //API add order
 
@@ -392,7 +403,10 @@ app.get('/orders/:name', routes.orders);
 app.get('/docs', routes.docs);
 app.get('/getstarted', routes.started);
 app.get('/about', routes.about);
+app.get('/test', routes.test);
 app.get('*', routes.index);
+
+
 
 
 

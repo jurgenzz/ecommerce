@@ -41,3 +41,7 @@ exports.started = function (req, res) {
 exports.about = function (req, res) {
     res.render('docs/about')
 };
+
+exports.test = function(req, res) {
+    res.render('test')
+};

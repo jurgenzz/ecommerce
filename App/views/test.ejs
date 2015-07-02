@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Dashboard</title>
+    <link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="javascripts/test.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
+
+</head>
+<body>
+<h3>Book Now</h3>
+
+<div class="row" ng-app="addApp" ng-controller="addCtrl">
+    <div class="col-md-6">
+        <form ng-submit="forma()">
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon" id="sizing-addon1">Name</span>
+                <input type="text" class="form-control"  aria-describedby="sizing-addon1" ng-model="form.name">
+            </div>
+            <br>
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon" id="sizing-addon1">E-mail</span>
+                <input type="text" class="form-control"  aria-describedby="sizing-addon1" ng-model="form.email">
+            </div>
+            <br>
+            <div class="radio">
+                <label class="btn btn-default btn-block">
+                    <input type="radio" name="optionsRadios" id="30day" value="30day" checked="checked" ng-model="form.checked">
+		<span>30€ Weekday 10am - 2pm
+                </label>
+            </div>
+            <div class="radio">
+                <label class="btn btn-default btn-block">
+                    <input type="radio" name="optionsRadios" id="40weekend" value="40weekend" checked="checked" ng-model="form.checked">
+		<span>40€ Weekend 4 hours
+
+                </label>
+            </div>
+            <div class="radio">
+                <label class="btn btn-default btn-block">
+                    <input type="radio" name="optionsRadios" id="45day" value="45day" checked="checked" ng-model="form.checked">
+		<span>45€ Weekday 2.30pm - 6.30pm
+                </label>
+            </div>
+            <div class="radio">
+                <label class="btn btn-default btn-block">
+                    <input type="radio" name="optionsRadios" id="60day" value="60day" checked="checked" ng-model="form.checked">
+		<span>60€ Weekday 7pm - 11pm
+                </label>
+            </div>
+            <div class="radio">
+                <label class="btn btn-default btn-block">
+                    <input type="radio" name="optionsRadios" id="60weekend" value="60weekend" checked="checked" ng-model="form.checked">
+                    <span>€60 Weekend 6 hours</span>
+                </label>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-default btn-lg btn-block">Book now!</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
